@@ -1,0 +1,34 @@
+version: "3.6"
+
+services:
+  app:
+    image: app
+    build:
+      context: .
+    volumes:
+      - ./src/binance:/app/src/binance
+    env_file:
+      - ./.env
+    depends_on:
+      - postgres
+      - rabbitmq
+    command: celery -A binance worker --loglevel=info
+    restart: always
+  tests:
+    image: tests
+    build:
+      context: .
+    volumes:
+      - ./src/binance_worker:/app/src/binance_worker
+    command: pytest reservation_invoices.tests
+  postgres:
+    image: postgres:alpine
+    volumes:
+      - ./state/postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=binance
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123
+  rabbitmq:
+      image: rabbitmq:3-management-alpine
+      container_name: rabbitmq
