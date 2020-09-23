@@ -3,7 +3,7 @@ venv/
 state/
 .idea/
 *.egg-info
-
+*.pyc
 .python-version
 readme.md
 changelog.md
