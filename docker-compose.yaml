@@ -28,5 +28,5 @@ services:
 #    build:
 #      context: .
 #    volumes:
-#      - ./src/binance:/app/src/binance_worker
+#      - ./src/binance:/app/src/binance
 #    command: pytest reservation_invoices.tests

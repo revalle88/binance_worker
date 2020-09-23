@@ -1,12 +1,10 @@
-from datetime import timedelta
-
 from celery.task import periodic_task
+from binance.services.book import BookService
+from datetime import timedelta
+from binance.settings import binance_symbol, binance_limit, binance_interval
 
-from binance.celery_app import client
 
-
-@periodic_task(run_every=timedelta(seconds=10))
-def c():
-    print('CCCCC')
-    client.set('foo', 'bar')
-    return ' i running periodic task '
+@periodic_task(run_every=timedelta(seconds=int(binance_interval)))
+def save_stakan_data():
+    book = BookService.get_book(limit=binance_limit, symbol=binance_symbol).content
+    return BookService.save_book(book)
