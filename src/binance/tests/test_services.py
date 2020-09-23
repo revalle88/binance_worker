@@ -1,4 +1,4 @@
-from binance_worker.services.book import BookService
+from binance.services.book import BookService
 import pytest_mock
 
 
