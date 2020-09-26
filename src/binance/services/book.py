@@ -26,7 +26,7 @@ class BookService:
             requests.get(
                 f'{history_url}?symbol={symbol}&interval={interval}&limit={str(limit)}'
             ).text
-        )[0]
+        )
 
     @classmethod
     def save_book(cls, book):
