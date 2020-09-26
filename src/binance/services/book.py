@@ -21,7 +21,7 @@ class BookService:
         )
 
     @classmethod
-    def get_history(cls, symbol='BTCUSDT', interval='1m', limit='1'):
+    def get_history(cls, symbol='BTCUSDT', interval='5m', limit='1'):
         return json.loads(
             requests.get(
                 f'{history_url}?symbol={symbol}&interval={interval}&limit={str(limit)}'
