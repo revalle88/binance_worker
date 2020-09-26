@@ -10,19 +10,24 @@ services:
     env_file:
       - ./.env
     depends_on:
-      - redis
+      - mongodb
       - rabbitmq
     command: celery -A binance.celery_app worker -l info -B
     restart: always
   rabbitmq:
       image: rabbitmq:3-management-alpine
       container_name: rabbitmq
-  redis:
-    image: redis:alpine
-    volumes:
-      - ./state/postgres/data:/data
-    ports:
-      - 6399:6379
+  mongodb:
+      image: mongo:latest
+      hostname: mongodb
+      environment:
+        - MONGO_DATA_DIR=/data/db
+        - MONGO_LOG_DIR=/dev/null
+      volumes:
+        - ./data/mongo:/data/db
+      ports:
+          - 27027:27017
+      command: mongod --logpath=/dev/null # --quiet
 #  tests:
 #    image: tests
 #    build:

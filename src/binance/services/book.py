@@ -1,16 +1,18 @@
 import json
 
 import requests
-import redis
-from binance.settings import book_order_url, history_url, redis_dsn
-import time
+import pymongo
+from binance.settings import book_order_url, history_url, mongo_dsn
+
 
 import logging
 logger = logging.getLogger(__name__)
 
 
 class BookService:
-    client = redis.Redis.from_url(redis_dsn)
+    client = pymongo.MongoClient(mongo_dsn)
+    db = client['binance']
+    history_table = db['history']
 
     @classmethod
     def get_book(cls, limit=5000, symbol='BTCUSDT'):
@@ -31,8 +33,8 @@ class BookService:
     @classmethod
     def save_book(cls, book):
         try:
-            cls.client.set(str(int(time.time())) , book)
+            cls.history_table.save(book)
         except Exception as e:
-            logger.error('Redis save error!!!')
+            logger.error('Mongo save error!!!')
             logger.error(e)
         return ' success '
