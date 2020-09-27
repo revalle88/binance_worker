@@ -1,3 +1,4 @@
+import json
 import time
 
 from celery.task import periodic_task
@@ -16,7 +17,13 @@ def save_data():
     history = BookService.get_history(
         symbol=binance_symbol, interval=history_interval, limit=history_limit
     )
-    book['history'] = history
-    book['send_time'] = send_time
-    book['_id'] = send_time
-    return BookService.save_book(book)
+
+    record = {
+        'bids': json.dumps(book['bids']),
+        'asks': json.dumps(book['asks']),
+        'history': json.dumps(history),
+        'send_time': send_time,
+        '_id': send_time
+    }
+
+    return BookService.save_book(record)
